@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useState } from 'react';
+import React, { createContext, useCallback, useContext, useState } from 'react';
 
 import api from '../services/api';
 
@@ -21,9 +21,7 @@ interface AuthContextState {
 // Since we typed createContext, it is expecting the name argument. So this trick
 // '{} as AuthContext' is for us to initialize with an empty obj. We could already
 // pass a name, but if the user is not logged in, we dont want to have nothing there.
-export const AuthContext = createContext<AuthContextState>(
-  {} as AuthContextState,
-);
+const AuthContext = createContext<AuthContextState>({} as AuthContextState);
 
 export const AuthProvider: React.FC = ({ children }) => {
   const [data, setData] = useState<AuthData>(() => {
@@ -51,4 +49,12 @@ export const AuthProvider: React.FC = ({ children }) => {
       {children}
     </AuthContext.Provider>
   );
+};
+
+export const useAuth = (): AuthContextState => {
+  const context = useContext(AuthContext);
+
+  if (!context) throw new Error('useAuth must be used within an AuthProvider');
+
+  return context;
 };
