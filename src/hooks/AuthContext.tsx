@@ -16,11 +16,12 @@ interface SignInCredentials {
 interface AuthContextState {
   user: Record<string, unknown>;
   signIn(credentials: SignInCredentials): Promise<void>;
+  signOut(): void;
 }
 
 // Since we typed createContext, it is expecting the name argument. So this trick
-// '{} as AuthContext' is for us to initialize with an empty obj. We could already
-// pass a name, but if the user is not logged in, we dont want to have nothing there.
+// '{} as AuthContextState' is for us to initialize with an empty obj. We could already
+// pass a name, but if the user is not logged in, we want to have nothing there.
 const AuthContext = createContext<AuthContextState>({} as AuthContextState);
 
 export const AuthProvider: React.FC = ({ children }) => {
@@ -44,8 +45,16 @@ export const AuthProvider: React.FC = ({ children }) => {
     setData({ token, user });
   }, []);
 
+  const signOut = useCallback(() => {
+    // Use removeItem instead of clear so other localhost:3000 data won't delete.
+    localStorage.removeItem('@GoBarber:token');
+    localStorage.removeItem('@GoBarber:user');
+
+    setData({} as AuthData);
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ user: data.user, signIn }}>
+    <AuthContext.Provider value={{ user: data.user, signIn, signOut }}>
       {children}
     </AuthContext.Provider>
   );
