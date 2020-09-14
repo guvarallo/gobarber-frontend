@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-types */
 import React, { createContext, useCallback, useContext, useState } from 'react';
 
 import api from '../services/api';
@@ -5,7 +6,7 @@ import api from '../services/api';
 interface AuthData {
   token: string;
   // This user: Record<string, unknown> is to use in place of user: object
-  user: Record<string, unknown>;
+  user: object;
 }
 
 interface SignInCredentials {
@@ -14,7 +15,7 @@ interface SignInCredentials {
 }
 
 interface AuthContextState {
-  user: Record<string, unknown>;
+  user: object;
   signIn(credentials: SignInCredentials): Promise<void>;
   signOut(): void;
 }
