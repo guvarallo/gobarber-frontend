@@ -1,6 +1,6 @@
 # GoBarber Frontend
 
-The backend for the GoBarber App.
+The frontend for the GoBarber App.
 
 ## Built With
 
